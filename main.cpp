@@ -6,166 +6,92 @@
 *Your PSU user ID:  mvd5044
 *Course title CMPSC465 SU2021 
 *Due Time: 11:59PM EST, Sunday, May 30, 2021
-*Time of Last Modification: Time, Sunday, May 30, 2021
+*Time of Last Modification: 4:04PM, Sunday, May 30, 2021
 *Description: Project One utilizes stack to determine if a train can be marshelled from track a to b in the appropriate order
 */
 
-// Headers
+//----Headers---//
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
-#include <string>
 #include <iomanip>
-#include <fstream>
 #include <stack>
 
+//--- namespace --//
 using std::cout;
 using std::string;
 using std::stack;
 using std::cin;
 using std::endl;
 
-// Function prototypes
-void inOrder(int[],int);
-int extractNum(string&);
-
-const int MAX = 1000;
+//---- Global Variables ---//
+int N, i, coach, num;
 
 //---- STACK ---//
-stack<int> 
-	station;
-
-//--- FILE STREAM ---//
-std::ifstream fin;
+stack<int> station;
 
 // --------------------//
 // BEGIN MAIN FUNCTION //
 // -------------------//
-int main(){
-//----VARIABLES----//
-bool 
-	canMarshal = true;
+int main() {
+	//--- FILE STREAM ---//
+	// read-only //
+  freopen("lab1in.txt", "r", stdin);
 
-int 
-	coach[MAX];
+	// Read file //
+  while (1) {
+		// grab digit //
+    scanf("%d\n", &N);
+			// end of input //
+      if (N==0) {
+				fflush(stdin);
+        break;
+      }
+			// else continue to next num //
+      while (1) {
+				// empty stack //
+        while (!station.empty()) {
+          station.pop();
+        }
+				// check coaches order in station //
+        for (num = i = 0; i < N; i++) {
+					// next num in line one //
+          scanf("%d ", &coach);
+					// end block //
+          if (coach==0) {
+						fflush(stdin);
+            break;
+          }
 
-int 
-	N;
+          while (N > num && num != coach) {
+            if (!station.empty() && station.top() == coach) {
+                break;
+            }
+            station.push(++num);
+          }
 
-int i = 0;
+          if (station.top() == coach) {
+           station.pop();
+          }
 
-string 
-	temp;	
-
-int train;
-
-fin.open("lab1in.txt"); // open file
-
-if(fin.fail()){ // if file doesn't open
-	cout << "Error opening file. Try again.\n";
-	exit(0);
-
-	} else { // read until end of file
-	cout << "\n\nFile opened successfully. Processing now \n\n" << endl;
-		// grab line
-		getline(fin, temp);
-
-		// find file token which = N
-		N = extractNum(temp);
-		cout << "This is N :: " << N << endl << endl;
-
-		while(!fin.eof()){
-			getline(fin, temp);
-
-			while(i < N){
-				train = extractNum(temp);
-				coach[i] = train;
-				cout << coach[i] << ' ';
-				i++;
-
-				if(train == 0){
-					cout << endl;
-					N = extractNum(temp);
-
-					if(N==0){
-						cout << endl;
-						cout << N;
-						break;
-					} else {
-							cout << "This is N :: " << N << endl;
-							i = 0;
-					}
 				}
-			}
+			// end
+      if (coach==0) {
+					fflush(stdin);
+          break;
+      }
 
-			int k = 0;
-			station.push(1);
-
-			for(int j = 1; j <= N; j++){
-				if(!station.empty() && station.top()==coach[k]){
-					k++;
-					
-					station.pop();
-					j--;
-					continue;
-				} 
-				station.push(coach[j++]);
-
-				while(!station.empty()){
-				if(station.top()==coach[k]){
-					k++;
-					station.pop();
-				}
-				else {
-					canMarshal = false;
-					break;
-				}
-				}
-			}
-
-			
-
-			if(!canMarshal){
-				cout << "No" << endl;
-			} else {
-				cout << "Yes" << endl;
-			}
-
-			cout << "\n";
-
-			i = 0;
-
-		}
-	}
-
-	fin.close(); // close file
-
-	cout << "\n";
-
-	return 0;
+			// -- Can Marshal -- //
+      if (station.empty()) {
+        cout << "Yes\n";
+      } else {
+        cout << "No\n";
+      }
+  	}
+	
+  	cout << "\n";
+  }
+	// end program //
+  return 0;
 }
-
-// Function Definition
-// extracts string into its pieces ready for fixin'
-// using the space as a compass
-string extractField(string& s)
-{
-	// look for # - first one reading left to right
-	int pos = s.find(' '); // first position of first space
-	string position = s.substr(0, pos); // create new string
-	s = s.substr(pos + 1);
-	// split input string at space point
-	return position;
-}
-
-// function DEFINITION
-// converts string val to integer
-int extractNum(string& s){
-
-	string str = extractField(s);
-	int num = 0;
-	std::stringstream val(str);
-	val >> num;
-
-	return num;
-}
+// end of main //
