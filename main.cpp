@@ -1,16 +1,12 @@
 /**
 *File Name: Begin with "assign" and then the assignment number, for example, proj1.cpp, or proj1.h. You must have the extension .cpp or .h
-
 *Academic Integrity Statement: I certify that, while others may have assisted me in brain storming, debugging and validating this program, the program itself is my own work. I understand that submitting code which is the work of other individuals is a violation of the course Academic Integrity Policy and may result in a zero credit for the assignment, or course failure and a report to the Academic Dishonesty Board. I also understand that if I knowingly give my original work to another individual that it could also result in a zero credit for the assignment, or course failure and a report to the Academic Dishonesty Board. See Academic Integrity Procedural Guidelines (Links to an external site.) at:  https://psbehrend.psu.edu/intranet/faculty-resources/academic-integrity/academic-integrity-procedural-guidelines (Links to an external site.)
-
 *Assisted by and Assisted line numbers:
-
 *Your Name: Mio Diaz
 *Your PSU user ID:  mvd5044
 *Course title CMPSC465 SU2021 
 *Due Time: 11:59PM EST, Sunday, May 30, 2021
 *Time of Last Modification: Time, Sunday, May 30, 2021
-
 *Description: Project One utilizes stack to determine if a train can be marshelled from track a to b in the appropriate order
 */
 
@@ -70,22 +66,23 @@ if(fin.fail()){ // if file doesn't open
 	exit(0);
 
 	} else { // read until end of file
-	cout << "File opened successfully. Processing now " << endl;
+	cout << "\n\nFile opened successfully. Processing now \n\n" << endl;
 		// grab line
 		getline(fin, temp);
 
 		// find file token which = N
 		N = extractNum(temp);
-		cout << "This is N :: " << N << endl;
+		cout << "This is N :: " << N << endl << endl;
 
 		while(!fin.eof()){
 			getline(fin, temp);
 
 			while(i < N){
 				train = extractNum(temp);
-				station.push(train);
-				cout << station.top() << ' ';
+				coach[i] = train;
+				cout << coach[i] << ' ';
 				i++;
+
 				if(train == 0){
 					cout << endl;
 					N = extractNum(temp);
@@ -101,7 +98,41 @@ if(fin.fail()){ // if file doesn't open
 				}
 			}
 
-			cout << endl;
+			int k = 0;
+			station.push(1);
+
+			for(int j = 1; j <= N; j++){
+				if(!station.empty() && station.top()==coach[k]){
+					k++;
+					
+					station.pop();
+					j--;
+					continue;
+				} 
+				station.push(coach[j++]);
+
+				while(!station.empty()){
+				if(station.top()==coach[k]){
+					k++;
+					station.pop();
+				}
+				else {
+					canMarshal = false;
+					break;
+				}
+				}
+			}
+
+			
+
+			if(!canMarshal){
+				cout << "No" << endl;
+			} else {
+				cout << "Yes" << endl;
+			}
+
+			cout << "\n";
+
 			i = 0;
 
 		}
